@@ -1,12 +1,3 @@
-#
-# This is a Shiny web application. You can run the application by clicking
-# the 'Run App' button above.
-#
-# Find out more about building applications with Shiny here:
-#
-#    https://shiny.posit.co/
-#
-
 
 ## https://debruine.github.io/shinyintro/data.html
 library(shiny)
@@ -18,13 +9,13 @@ sheet_id <- "https://docs.google.com/spreadsheets/d/1Y8HZf93GiC_8XjK7nxqZONcTmi4
 N1counts <- read_sheet(sheet_id)
 N1counts$Date <- as.Date(as.character(N1counts$Date), "%y%m%d")
 
-# Define UI for application that draws a histogram
+# Define UI for application that draws a line chart
 ui <- fluidPage(
 
     # Application title
     titlePanel("WBE-Analysis"),
 
-    # Sidebar with a slider input for number of bins 
+    # Sidebar with a dropdown for number site 
     sidebarLayout(
         sidebarPanel(
           selectInput("SiteSelect",
@@ -32,14 +23,14 @@ ui <- fluidPage(
                         choices = c("CS", "GG", "GO", "GR", "WB", "WK", "WY"))
         ),
 
-        # Show a plot of the generated distribution
+        # Show a plot of the n1 counts
         mainPanel(
            plotOutput("N1Plot")
         )
     )
 )
 
-# Define server logic required to draw a histogram
+# Define server logic required to draw a line chart
 server <- function(input, output) {
 
     output$N1Plot <- renderPlot({
