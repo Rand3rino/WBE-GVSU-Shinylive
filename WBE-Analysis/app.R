@@ -17,7 +17,7 @@ library(tidyverse)
 
 # https://lokraj.me/post/download-github-data/
 #library(readr)
-github_url <- "https://raw.githubusercontent.com/Rand3rino/WBE-GVSU-Shinylive/main/WBE-Analysis/N%20Counts.csv"
+# github_url <- "https://raw.githubusercontent.com/Rand3rino/WBE-GVSU-Shinylive/main/WBE-Analysis/N%20Counts.csv"
 #N1counts <- read_csv(url(github_url))
 #N1counts$Date <- as.Date(as.character(N1counts$Date), "%y%m%d")
 
@@ -27,7 +27,7 @@ github_url <- "https://raw.githubusercontent.com/Rand3rino/WBE-GVSU-Shinylive/ma
 #y <- read.csv(text = x)
 
 # https://rpubs.com/kylewbrown/github-csv-r
-N1counts <- read.csv(github_url)
+# N1counts <- read.csv(github_url)
 N1counts <- read.csv("https://docs.google.com/spreadsheets/d/1Y8HZf93GiC_8XjK7nxqZONcTmi4Ck7EH96hR4q6Kbio/export?format=csv")
 
 # # Define UI for application that draws a line chart
