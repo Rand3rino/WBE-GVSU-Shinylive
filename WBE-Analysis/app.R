@@ -2,11 +2,7 @@
 
 library(shiny)
 library(tidyverse)
-library(plotly)
-
-
-#shinylive::export("WBE-Analysis", "docs")
-# httpuv::runStaticServer("docs/", port=8008)
+# library(plotly)
 
 N1counts <- read.csv("https://docs.google.com/spreadsheets/d/1Y8HZf93GiC_8XjK7nxqZONcTmi4Ck7EH96hR4q6Kbio/export?format=csv")
 N1counts$Date <- as.Date(as.character(N1counts$Date), format = "%y%m%d")
@@ -32,8 +28,10 @@ ui <- fluidPage(
     
     # Show a plot of the n1 counts
     mainPanel(
-      plotlyOutput("N1Plot"),
-      plotlyOutput("VariantPlot")
+      # plotlyOutput("N1Plot"),
+      # plotlyOutput("VariantPlot")
+      plotOutput("N1Plot"),
+      plotOutput("VariantPlot")
     )
   # )
 )
@@ -41,17 +39,26 @@ ui <- fluidPage(
 # # Define server logic required to draw a line chart
 server <- function(input, output) {
   
-  output$N1Plot <- renderPlotly({
-    # ggplot(N1counts, aes(x=Date, y=log(N1.GC.100mL))) + geom_point() + geom_smooth() + theme_bw()
-    ggplotly(ggplot(N1counts, aes(x=Date, y=log(N1.GC.100mL))) + geom_point() + geom_smooth() + theme_bw())
+  # output$N1Plot <- renderPlotly({
+  #   ggplotly(ggplot(N1counts, aes(x=Date, y=log(N1.GC.100mL))) + geom_point())
+  # })
+  # 
+  # output$VariantPlot <- renderPlotly({
+  #   ggplotly(ggplot(VariantProportions, aes(x=Date.by.Week, y=Proportion)) + geom_col(aes(fill=Variant)) + theme_bw())
+  # })
+  
+  output$N1Plot <- renderPlot({
+    ggplot(N1counts, aes(x=Date, y=log(N1.GC.100mL))) + geom_point() + geom_smooth() + theme_bw()
   })
   
-  output$VariantPlot <- renderPlotly({
-    # ggplot(VariantProportions, aes(x=Date.by.Week, y=Proportion)) + geom_col(aes(fill=Variant)) + theme_bw() + theme(legend.position = "bottom")
-    ggplotly(ggplot(VariantProportions, aes(x=Date.by.Week, y=Proportion)) + geom_col(aes(fill=Variant)) + theme_bw() + theme(legend.position = "bottom"))
+  output$VariantPlot <- renderPlot({
+    ggplot(VariantProportions, aes(x=Date.by.Week, y=Proportion)) + geom_col(aes(fill=Variant)) + theme_bw() + theme(legend.position = "bottom")
   })
 }
 
 # Run the application 
 shinyApp(ui = ui, server = server)
 
+
+#shinylive::export("WBE-Analysis", "docs")
+# httpuv::runStaticServer("docs/", port=8008)
