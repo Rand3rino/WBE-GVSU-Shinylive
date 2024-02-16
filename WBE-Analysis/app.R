@@ -32,8 +32,8 @@ ui <- fluidPage(
     
     # Show a plot of the n1 counts
     mainPanel(
-      plotOutput("N1Plot"),
-      plotOutput("VariantPlot")
+      plotlyOutput("N1Plot"),
+      plotlyOutput("VariantPlot")
     )
   # )
 )
@@ -41,11 +41,13 @@ ui <- fluidPage(
 # # Define server logic required to draw a line chart
 server <- function(input, output) {
   
-  output$N1Plot <- renderPlot({
-    ggplotly(ggplot(N1counts, aes(x=Date, y=log(`N1.GC.100mL`))) + geom_point() + geom_smooth() + theme_bw()) 
+  output$N1Plot <- renderPlotly({
+    # ggplot(N1counts, aes(x=Date, y=log(N1.GC.100mL))) + geom_point() + geom_smooth() + theme_bw()
+    ggplotly(ggplot(N1counts, aes(x=Date, y=log(N1.GC.100mL))) + geom_point() + geom_smooth() + theme_bw())
   })
   
-  output$VariantPlot <- renderPlot({
+  output$VariantPlot <- renderPlotly({
+    # ggplot(VariantProportions, aes(x=Date.by.Week, y=Proportion)) + geom_col(aes(fill=Variant)) + theme_bw() + theme(legend.position = "bottom")
     ggplotly(ggplot(VariantProportions, aes(x=Date.by.Week, y=Proportion)) + geom_col(aes(fill=Variant)) + theme_bw() + theme(legend.position = "bottom"))
   })
 }
