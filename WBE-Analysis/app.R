@@ -13,7 +13,7 @@ N1counts$Date <- as.Date(as.character(N1counts$Date), format = "%y%m%d")
 
 VariantProportions <- read.csv("https://docs.google.com/spreadsheets/d/19sCocxxppFfBrM0AKEojOzWoN6C6myoZjIA492deetc/export?format=csv")
 VariantProportions$Date.by.Week <- as.Date(VariantProportions$Date.by.Week, format ="%m/%d/%Y")
-VariantProportions <- VariantProportions %>% 
+VariantProportions <- VariantProportions %>%
   pivot_longer(!Date.by.Week, names_to = "Variant", values_to = "Proportion", values_drop_na = TRUE)
 
 # # Define UI for application that draws a line chart
@@ -42,13 +42,11 @@ ui <- fluidPage(
 server <- function(input, output) {
   
   output$N1Plot <- renderPlot({
-    N1Site <- N1counts #%>% filter(Site == input$SiteSelect)
-    ggplotly(ggplot(N1Site, aes(x=Date, y=log(`N1.GC.100mL`))) + geom_point() + geom_smooth() + theme_bw()) #+ geom_line() 
+    ggplotly(ggplot(N1counts, aes(x=Date, y=log(`N1.GC.100mL`))) + geom_point() + geom_smooth() + theme_bw()) 
   })
   
   output$VariantPlot <- renderPlot({
-    Variants <- VariantProportions #%>% filter(Site == input$SiteSelect)
-    ggplotly(ggplot(Variants, aes(x=Date.by.Week, y=Proportion)) + geom_col(aes(fill=Variant)) + theme_bw() + theme(legend.position = "bottom"))
+    ggplotly(ggplot(VariantProportions, aes(x=Date.by.Week, y=Proportion)) + geom_col(aes(fill=Variant)) + theme_bw() + theme(legend.position = "bottom"))
   })
 }
 
