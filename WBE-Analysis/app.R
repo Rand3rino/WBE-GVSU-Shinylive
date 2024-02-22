@@ -8,10 +8,10 @@ N1counts <- read.csv("https://docs.google.com/spreadsheets/d/1Y8HZf93GiC_8XjK7nx
 N1counts$Date <- as.Date(as.character(N1counts$Date), format = "%y%m%d")
 
 VariantProportions <- read.csv("https://docs.google.com/spreadsheets/d/19sCocxxppFfBrM0AKEojOzWoN6C6myoZjIA492deetc/export?format=csv")
-VariantProportions$Date.by.Week <- as.Date(VariantProportions$Date.by.Week, format ="%m/%d/%Y")
 colnames(VariantProportions) <- paste(colnames(VariantProportions), match(colnames(VariantProportions), colnames(VariantProportions)), sep="_")
 VariantProportions <- VariantProportions %>%
   pivot_longer(!Date.by.Week_1, names_to = "Variant", values_to = "Proportion", values_drop_na = TRUE)
+VariantProportions$Week <- as.Date(VariantProportions$Date.by.Week_1, format ="%m/%d/%Y")
 VariantProportions <- separate_wider_delim(VariantProportions, Variant, delim = "_", names = c("Variant", "Appearance"))
 VariantProportions$Appearance <- as.integer(VariantProportions$Appearance)
 VariantProportions <- VariantProportions[order(VariantProportions$Appearance),]
@@ -48,7 +48,7 @@ server <- function(input, output) {
   })
 
   output$VariantPlot <- renderPlotly({         
-  ggplotly(ggplot(VariantProportions, aes(x=Date.by.Week_1, y=Proportion))
+  ggplotly(ggplot(VariantProportions, aes(x=Week, y=Proportion))
     + geom_col(aes(fill=Variant, color=Variant))
     + theme_bw()
     + scale_y_continuous(labels = scales::percent) # Y-Axis as percents
