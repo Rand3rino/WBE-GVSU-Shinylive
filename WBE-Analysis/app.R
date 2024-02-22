@@ -3,7 +3,7 @@
 library(shiny)
 library(tidyverse)
 library(plotly)
-
+options(scipen = 999)
 N1counts <- read.csv("https://docs.google.com/spreadsheets/d/1Y8HZf93GiC_8XjK7nxqZONcTmi4Ck7EH96hR4q6Kbio/export?format=csv")
 N1counts$Date <- as.Date(as.character(N1counts$Date), format = "%y%m%d")
 
@@ -23,38 +23,39 @@ ui <- fluidPage(
   # Application title
   titlePanel("WBE-Analysis"),
   
-  # Sidebar with a dropdown for number site
-  # sidebarLayout(
-    # sidebarPanel(
-      # selectInput("SiteSelect",
-      #             "Select Site to view",
-      #             choices = c("CS", "GG", "GO", "GR", "WB", "WK", "WY"))
-    # ),
     
-    # Show a plot of the n1 counts
     mainPanel(
       plotlyOutput("N1Plot"),
       plotlyOutput("VariantPlot")
       # plotOutput("N1Plot"),
       # plotOutput("VariantPlot")
     )
-  # )
 )
-# 
+
 # # Define server logic required to draw a line chart
 server <- function(input, output) {
   
   output$N1Plot <- renderPlotly({
-    ggplotly(ggplot(N1counts, aes(x=Date, y=log(N1.GC.100mL))) + geom_point() + theme_bw())
+    ggplotly(ggplot(N1counts, aes(x=Date, y=N1.GC.100mL)) 
+       + geom_point() 
+       + geom_smooth()
+       + theme_bw()
+       + scale_y_log10()
+       + ylab("Log (N1 Counts)")
+       + ggtitle("N1 Counts over Time (Log Scale)", )
+       + theme(plot.title = element_text(hjust = 0.5))
+    )
   })
 
-  output$VariantPlot <- renderPlotly({
-    ggplotly(ggplot(VariantProportions, aes(x=Date.by.Week_1, y=Proportion)) 
-      + geom_col(aes(fill=Variant, color=Variant))
-      + theme_bw()
-      + scale_y_continuous(labels = scales::percent) # Y-Axis as percents
-      + xlab("Date")
-    )
+  output$VariantPlot <- renderPlotly({         
+  ggplotly(ggplot(VariantProportions, aes(x=Date.by.Week_1, y=Proportion))
+    + geom_col(aes(fill=Variant, color=Variant))
+    + theme_bw()
+    + scale_y_continuous(labels = scales::percent) # Y-Axis as percents
+    + xlab("Date")
+    + ggtitle("Variants over Time as Proportions")
+    + theme(plot.title = element_text(hjust = 0.5))
+  )
   })
   
   # output$N1Plot <- renderPlot({
@@ -71,4 +72,4 @@ shinyApp(ui = ui, server = server)
 
 
 #shinylive::export("WBE-Analysis", "docs")
-# httpuv::runStaticServer("docs/", port=8008)
+#httpuv::runStaticServer("docs")
