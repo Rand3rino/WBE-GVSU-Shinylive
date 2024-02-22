@@ -48,14 +48,14 @@ server <- function(input, output) {
   })
 
   output$VariantPlot <- renderPlotly({         
-  ggplotly(ggplot(VariantProportions, aes(x=Week, y=Proportion))
-    + geom_col(aes(fill=Variant, color=Variant))
-    + theme_bw()
-    + scale_y_continuous(labels = scales::percent) # Y-Axis as percents
-    + xlab("Date")
-    + ggtitle("Variants over Time as Proportions")
-    + theme(plot.title = element_text(hjust = 0.5))
-  )
+    ggplotly(ggplot(VariantProportions, aes(x=Week, y=Proportion))
+      + geom_col(aes(fill=Variant))
+      + theme_bw()
+      + scale_y_continuous(labels = scales::percent) # Y-Axis as percents
+      + xlab("Date")
+      + ggtitle("Variants over Time as Proportions")
+      + theme(plot.title = element_text(hjust = 0.5))
+    )
   })
   
   # output$N1Plot <- renderPlot({
