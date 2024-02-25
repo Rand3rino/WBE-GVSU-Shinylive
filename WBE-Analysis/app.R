@@ -19,6 +19,7 @@ VariantProportions <- separate_wider_delim(VariantProportions, Variant, delim = 
 VariantProportions$Appearance <- as.integer(VariantProportions$Appearance)
 VariantProportions <- VariantProportions[order(VariantProportions$Appearance),]
 VariantProportions$Variant <- factor(VariantProportions$Variant, levels=unique(VariantProportions$Variant))
+VariantProportions <- select(VariantProportions, -Variant)
 
 VariantColors <- read.csv("https://docs.google.com/spreadsheets/d/19sCocxxppFfBrM0AKEojOzWoN6C6myoZjIA492deetc/gviz/tq?tqx=out:csv;outFileName:data&sheet=Sheet2")
 VariantColors$Variant <- factor(VariantColors$Variant, levels=unique(VariantColors$Variant))
@@ -59,9 +60,9 @@ server <- function(input, output) {
   })
 
   output$VariantPlot <- renderPlotly({         
-    p<-ggplotly((ggplot(VariantProportions, aes(x=Week, y=Proportion, fill=Variant.y))
-      + geom_col(aes(fill=HexCode))
-      + scale_fill_identity(name = "Variants", labels=levels(VariantProportions$Variant.y), guide="legend")
+    p<-ggplotly((ggplot(VariantProportions, aes(x=Week, y=Proportion))
+      + scale_fill_identity(name = "Variants", labels=levels(VariantProportions$Variant), guide="legend")
+      + geom_col(aes(fill=HexCode, group=Variant))
       + theme_bw()
       + scale_y_continuous(labels = scales::percent) # Y-Axis as percents
       + xlab("Date")
