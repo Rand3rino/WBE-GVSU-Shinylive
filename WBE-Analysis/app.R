@@ -5,8 +5,10 @@ library(tidyverse)
 library(plotly)
 
 options(scipen = 999)
-N1counts <- read.csv("https://docs.google.com/spreadsheets/d/1Y8HZf93GiC_8XjK7nxqZONcTmi4Ck7EH96hR4q6Kbio/export?format=csv")
+N1counts <- read.csv("https://docs.google.com/spreadsheets/d/1Y8HZf93GiC_8XjK7nxqZONcTmi4Ck7EH96hR4q6Kbio/gviz/tq?tqx=out:csv;outFileName:data&sheet=N1%20Counts")
 N1counts$Date <- as.Date(as.character(N1counts$Date), format = "%y%m%d")
+N1 <- N1counts %>% group_by(Date) %>% summarise( N1 = mean(N1.GC.mL * Flow..mL.Day.))
+
 
 # https://matrixify-excelify.medium.com/download-specific-google-sheets-tab-as-csv-file-e805ecef29fc
 # VariantProportions <- read.csv("https://docs.google.com/spreadsheets/d/19sCocxxppFfBrM0AKEojOzWoN6C6myoZjIA492deetc/export?format=csv")
@@ -48,7 +50,7 @@ ui <- fluidPage(
 server <- function(input, output) {
   
   output$N1Plot <- renderPlotly({
-    ggplotly((ggplot(N1counts, aes(x=Date, y=N1.GC.100mL))
+    ggplotly((ggplot(N1, aes(x=Date, y=N1))
        + geom_point()
        + geom_smooth()
        + theme_bw()
