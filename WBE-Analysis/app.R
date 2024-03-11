@@ -43,7 +43,8 @@ ui <- fluidPage(
     mainPanel(
       # plotlyOutput("N1Plot"),
       plotOutput("N1Plot"),
-      plotlyOutput("VariantPlot")
+      plotlyOutput("VariantPlot"),
+      img(src='CMB Logos 001.jpg', align = "center")
       
       # plotOutput("VariantPlot")
     )
