@@ -4,10 +4,13 @@ library(shiny)
 library(tidyverse)
 library(plotly)
 
+# N1 Counts, weighted average by flow per day
 options(scipen = 999)
 N1counts <- read.csv("https://docs.google.com/spreadsheets/d/1Y8HZf93GiC_8XjK7nxqZONcTmi4Ck7EH96hR4q6Kbio/gviz/tq?tqx=out:csv;outFileName:data&sheet=N1%20Counts")
 N1counts$Date <- as.Date(as.character(N1counts$Date), format = "%y%m%d")
-N1 <- N1counts %>% group_by(Date) %>% summarise( N1 = mean(N1.GC.mL * Flow..mL.Day.))
+N1 <- N1counts %>% 
+        group_by(Date) %>% 
+        summarise( N1 = mean(N1.GC.mL * Flow..mL.Day.))
 
 
 # https://matrixify-excelify.medium.com/download-specific-google-sheets-tab-as-csv-file-e805ecef29fc
