@@ -35,21 +35,18 @@ VariantProportions <- left_join( VariantProportions, VariantColors, by="Appearan
 
 # # Define UI for application that draws a line chart
 ui <- fluidPage(
-  titlePanel(""),
-    mainPanel(
-      
-      # Application title
-      titlePanel(h1("COVID-19 Wastewater Based Epidemiology", align = "center")),
-      
-      # Add GVSU CMB Logo https://www.w3schools.com/html/html_images.asp
-      HTML('<center><img src="CMB Logos 001.jpg" alt="GVSU CMB Logo" width="250" height="80"></center>'),
-      
-      plotOutput("N1Plot"),
-      plotlyOutput("VariantPlot"),
-      
-      
-      # plotOutput("VariantPlot")
-    )
+  mainPanel(
+    
+    # Application title
+    titlePanel(h1("COVID-19 Wastewater Based Epidemiology", align = "center")),
+    
+    # Add GVSU CMB Logo https://www.w3schools.com/html/html_images.asp
+    # HTML('<center><img src="CMB Logos 001.jpg" alt="GVSU CMB Logo" width="250" height="80"></center>'),
+    
+    # Plots
+    plotOutput("N1Plot"),
+    plotlyOutput("VariantPlot")
+  )
 )
 
 # # Define server logic required to draw a line chart
