@@ -35,44 +35,44 @@ VariantProportions <- left_join( VariantProportions, VariantColors, by="Appearan
 
 # # Define UI for application that draws a line chart
 ui <- fluidPage(
-  mainPanel(
+  
     
-<<<<<<< HEAD
-    # Application title
-    titlePanel(h1("COVID-19 Wastewater Based Epidemiology", align = "center")),
-    
-    # Add GVSU CMB Logo https://www.w3schools.com/html/html_images.asp
-    # HTML('<center><img src="CMB Logos 001.jpg" alt="GVSU CMB Logo" width="250" height="80"></center>'),
-    
-    # Plots
-    plotOutput("N1Plot"),
-    plotlyOutput("VariantPlot")
-  )
-=======
     mainPanel(
+      
+      # Application Title
+      titlePanel(h1("COVID-19 Wastewater Based Epidemiology", align = "center")),
+      
+      # Description
+      p("Wastewater-based epidemiology (WBE) is an important tool to monitor pathogenic agents that are present in feces (such as SARS-CoV-2).", align="center"),
+      p("Students in the GVSU Cellular and Molecular Biology department have collected data from wastewater samples in Kent County.", align="center"),
+      p("The N1 counts found in the samples are displayed in the first figure, and the second figure shows the weekly variant proportions.", align="center"),
+      
+      
+      # Plots
       # plotlyOutput("N1Plot"),
+      titlePanel(h3("N1 Counts Over Time (Log Scale)", align="center")),
       plotOutput("N1Plot"),
+      titlePanel(h3("Variant Proportions - Weekly", align = "center")),
       plotlyOutput("VariantPlot")
       
       # plotOutput("VariantPlot")
     )
->>>>>>> parent of 7ee091c (Image Code)
 )
 
 # # Define server logic required to draw a line chart
 server <- function(input, output) {
   
-  output$N1Plot <- renderPlotly({
-    ggplotly((ggplot(N1, aes(x=Date, y=N1))
-       + geom_point()
-       + geom_smooth()
-       + theme_bw()
-       + scale_y_log10()
-       + ylab("Log (N1 Counts)")
-       + ggtitle("N1 Counts over Time (Log Scale)", )
-       + theme(plot.title = element_text(hjust = 0.5)))
-    )
-  })
+  # output$N1Plot <- renderPlotly({
+  #   ggplotly((ggplot(N1, aes(x=Date, y=N1))
+  #      + geom_point()
+  #      + geom_smooth()
+  #      + theme_bw()
+  #      + scale_y_log10()
+  #      + ylab("Log (N1 Counts)")
+  #      # + ggtitle("N1 Counts over Time (Log Scale)", )
+  #      + theme(plot.title = element_text(hjust = 0.5)))
+  #   )
+  # })
 
   output$VariantPlot <- renderPlotly({         
     p<-ggplotly((ggplot(VariantProportions, aes(x=Week, y=Proportion))
@@ -81,7 +81,7 @@ server <- function(input, output) {
       + theme_bw()
       + scale_y_continuous(labels = scales::percent) # Y-Axis as percents
       + xlab("Date")
-      + ggtitle("Variants over Time as Proportions")
+      # + ggtitle("Variants over Time as Proportions")
       + theme(plot.title = element_text(hjust = 0.5))
     )) %>% layout(legend = list(orientation = "h", y =-.4))
     
@@ -93,12 +93,12 @@ server <- function(input, output) {
   })
   
   output$N1Plot <- renderPlot({
-    (ggplot(N1counts, aes(x=Date, y=N1.GC.100mL)) + geom_point()
+    (ggplot(N1counts, aes(x=Date, y=N1.GC.100mL)) + geom_point()+ geom_point()
       + geom_smooth()
       + theme_bw()
       + scale_y_log10()
       + ylab("N1 Counts (Log Scale)")
-      + ggtitle("N1 Counts over Time (Log Scale)", )
+      # + ggtitle("N1 Counts over Time (Log Scale)", )
       + theme(plot.title = element_text(hjust = 0.5)))
   })
   # 
