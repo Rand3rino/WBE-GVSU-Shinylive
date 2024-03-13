@@ -37,6 +37,7 @@ VariantProportions <- left_join( VariantProportions, VariantColors, by="Appearan
 ui <- fluidPage(
   mainPanel(
     
+<<<<<<< HEAD
     # Application title
     titlePanel(h1("COVID-19 Wastewater Based Epidemiology", align = "center")),
     
@@ -47,6 +48,15 @@ ui <- fluidPage(
     plotOutput("N1Plot"),
     plotlyOutput("VariantPlot")
   )
+=======
+    mainPanel(
+      # plotlyOutput("N1Plot"),
+      plotOutput("N1Plot"),
+      plotlyOutput("VariantPlot")
+      
+      # plotOutput("VariantPlot")
+    )
+>>>>>>> parent of 7ee091c (Image Code)
 )
 
 # # Define server logic required to draw a line chart
