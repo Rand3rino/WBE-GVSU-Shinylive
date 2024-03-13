@@ -40,7 +40,7 @@ ui <- fluidPage(
     mainPanel(
       
       # Application Title
-      titlePanel(h1("COVID-19 Wastewater Based Epidemiology", align = "center")),
+      titlePanel(h2("COVID-19 Wastewater Based Epidemiology", align = "center")),
       
       # Description
       p("Wastewater-based epidemiology (WBE) is an important tool to monitor pathogenic agents that are present in feces (such as SARS-CoV-2).", align="center"),
@@ -50,9 +50,9 @@ ui <- fluidPage(
       
       # Plots
       # plotlyOutput("N1Plot"),
-      titlePanel(h3("N1 Counts Over Time (Log Scale)", align="center")),
+      titlePanel(h4("N1 Counts Over Time (Log Scale)", align="center")),
       plotOutput("N1Plot"),
-      titlePanel(h3("Variant Proportions - Weekly", align = "center")),
+      titlePanel(h4("Variant Proportions - Weekly", align = "center")),
       plotlyOutput("VariantPlot")
       
       # plotOutput("VariantPlot")
@@ -83,7 +83,7 @@ server <- function(input, output) {
       + xlab("Date")
       # + ggtitle("Variants over Time as Proportions")
       + theme(plot.title = element_text(hjust = 0.5))
-    )) %>% layout(legend = list(orientation = "h", y =-.4))
+    )) %>% layout(legend = list(orientation = "h", y =-.3))
     
     for (i in 1:nrow(VariantColors)) {
       p$x$data[[i]]$name <- VariantColors$Variant[VariantColors$HexCode==p$x$data[[i]]$name]
@@ -93,7 +93,7 @@ server <- function(input, output) {
   })
   
   output$N1Plot <- renderPlot({
-    (ggplot(N1counts, aes(x=Date, y=N1.GC.100mL)) + geom_point()+ geom_point()
+    (ggplot(N1counts, aes(x=Date, y=N1.GC.100mL)) + geom_point()
       + geom_smooth()
       + theme_bw()
       + scale_y_log10()
