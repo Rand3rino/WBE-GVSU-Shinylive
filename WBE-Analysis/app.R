@@ -52,6 +52,7 @@ ui <- fluidPage(
       # plotlyOutput("N1Plot"),
       titlePanel(h4("N1 Counts Over Time (Log Scale)", align="center")),
       plotOutput("N1Plot"),
+      checkboxInput('hide_points', "Hide Points: N1 Counts", value = FALSE),
       titlePanel(h4("Variant Proportions - Weekly", align = "center")),
       plotlyOutput("VariantPlot")
       
@@ -93,14 +94,28 @@ server <- function(input, output) {
   })
   
   output$N1Plot <- renderPlot({
-    (ggplot(N1counts, aes(x=Date, y=N1.GC.100mL)) + geom_point()
-      + geom_smooth()
-      + theme_bw()
-      + scale_y_log10()
-      + ylab("N1 Counts (Log Scale)")
-      # + ggtitle("N1 Counts over Time (Log Scale)", )
-      + theme(plot.title = element_text(hjust = 0.5)))
+    if (input$hide_points) {
+      (
+        ggplot(N1counts, aes(x = Date, y = N1.GC.100mL))
+        + geom_smooth()
+        + theme_bw()
+        + scale_y_log10()
+        + ylab("N1 Counts (Log Scale)")
+        + theme(plot.title = element_text(hjust = 0.5))
+      )
+    }
+    else {
+      (
+        ggplot(N1counts, aes(x = Date, y = N1.GC.100mL)) + geom_point()
+        + geom_smooth()
+        + theme_bw()
+        + scale_y_log10()
+        + ylab("N1 Counts (Log Scale)")
+        # + ggtitle("N1 Counts over Time (Log Scale)", )+theme(plot.title = element_text(hjust = 0.5))
+      )
+    }
   })
+    
   # 
   # output$VariantPlot <- renderPlot({
   #   ggplot(VariantProportions, aes(x=Date.by.Week, y=Proportion)) + geom_col(aes(fill=Variant)) + theme_bw() + theme(legend.position = "bottom")
