@@ -6,11 +6,11 @@ library(plotly)
 
 # N1 Counts, weighted average by flow per day
 options(scipen = 999)
-N1counts <- read.csv("https://docs.google.com/spreadsheets/d/1Y8HZf93GiC_8XjK7nxqZONcTmi4Ck7EH96hR4q6Kbio/gviz/tq?tqx=out:csv;outFileName:data&sheet=N1%20Counts")
-N1counts$Date <- as.Date(as.character(N1counts$Date), format = "%y%m%d")
-N1 <- N1counts %>% 
-        group_by(Date) %>% 
-        summarise( N1 = mean(N1.GC.mL * Flow..mL.Day.))
+# N1counts <- read.csv("https://docs.google.com/spreadsheets/d/1Y8HZf93GiC_8XjK7nxqZONcTmi4Ck7EH96hR4q6Kbio/gviz/tq?tqx=out:csv;outFileName:data&sheet=N1%20Counts")
+# N1counts$Date <- as.Date(as.character(N1counts$Date), format = "%y%m%d")
+# N1 <- N1counts %>% 
+#         group_by(Date) %>% 
+#         summarise( N1 = mean(N1.GC.mL * Flow..mL.Day.))
 
 
 # https://matrixify-excelify.medium.com/download-specific-google-sheets-tab-as-csv-file-e805ecef29fc
@@ -44,15 +44,15 @@ ui <- fluidPage(
       
       # Description
       p("Wastewater-based epidemiology (WBE) is an important tool to monitor pathogenic agents that are present in feces (such as SARS-CoV-2).", align="center"),
-      p("Students in the GVSU Cellular and Molecular Biology department have collected data from wastewater samples in Kent County.", align="center"),
-      p("The N1 counts found in the samples are displayed in the first figure, and the second figure shows the weekly variant proportions.", align="center"),
+      p("Students and staff of the GVSU Molecular Monitoring lab have collected data from wastewater samples in Kent County.", align="center"),
+      p("Over time, we've detected changes to the variants of COVID-19 in wasterwater.", align="center"),
       
       
       # Plots
       # plotlyOutput("N1Plot"),
-      titlePanel(h4("N1 Counts Over Time (Log Scale)", align="center")),
-      plotOutput("N1Plot"),
-      checkboxInput('hide_points', "Hide Points: N1 Counts", value = FALSE),
+      # titlePanel(h4("N1 Counts Over Time (Log Scale)", align="center")),
+      # plotOutput("N1Plot"),
+      # checkboxInput('hide_points', "Hide Points: N1 Counts", value = FALSE),
       titlePanel(h4("Variant Proportions - Weekly", align = "center")),
       plotlyOutput("VariantPlot")
       
@@ -81,40 +81,43 @@ server <- function(input, output) {
       + geom_col(aes(fill=HexCode, group=Variant))
       + theme_bw()
       + scale_y_continuous(labels = scales::percent) # Y-Axis as percents
+      + scale_x_date(breaks = unique(VariantProportions$Week))
       + xlab("Date")
+      + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
       # + ggtitle("Variants over Time as Proportions")
       + theme(plot.title = element_text(hjust = 0.5))
-    )) %>% layout(legend = list(orientation = "h", y =-.3))
+    )) %>% layout(legend = list(orientation = "h", y =-.6), xaxis = list(autorange = TRUE), yaxis = list(autorange = TRUE)) # Auto scale
+
     
     for (i in 1:nrow(VariantColors)) {
       p$x$data[[i]]$name <- VariantColors$Variant[VariantColors$HexCode==p$x$data[[i]]$name]
     }
     
-    p
+    p %>% config(displayModeBar = TRUE, displaylogo=FALSE, modeBarButtonsToRemove = c("zoom2d", "pan2d", "select2d", "lasso2d", "zoomIn2d", "zoomOut2d"))
   })
   
-  output$N1Plot <- renderPlot({
-    if (input$hide_points) {
-      (
-        ggplot(N1counts, aes(x = Date, y = N1.GC.100mL))
-        + geom_smooth()
-        + theme_bw()
-        + scale_y_log10()
-        + ylab("N1 Counts (Log Scale)")
-        + theme(plot.title = element_text(hjust = 0.5))
-      )
-    }
-    else {
-      (
-        ggplot(N1counts, aes(x = Date, y = N1.GC.100mL)) + geom_point()
-        + geom_smooth()
-        + theme_bw()
-        + scale_y_log10()
-        + ylab("N1 Counts (Log Scale)")
-        # + ggtitle("N1 Counts over Time (Log Scale)", )+theme(plot.title = element_text(hjust = 0.5))
-      )
-    }
-  })
+  # output$N1Plot <- renderPlot({
+  #   if (input$hide_points) {
+  #     (
+  #       ggplot(N1counts, aes(x = Date, y = N1.GC.100mL))
+  #       + geom_smooth()
+  #       + theme_bw()
+  #       + scale_y_log10()
+  #       + ylab("N1 Counts (Log Scale)")
+  #       + theme(plot.title = element_text(hjust = 0.5))
+  #     )
+  #   }
+  #   else {
+  #     (
+  #       ggplot(N1counts, aes(x = Date, y = N1.GC.100mL)) + geom_point()
+  #       + geom_smooth()
+  #       + theme_bw()
+  #       + scale_y_log10()
+  #       + ylab("N1 Counts (Log Scale)")
+  #       # + ggtitle("N1 Counts over Time (Log Scale)", )+theme(plot.title = element_text(hjust = 0.5))
+  #     )
+  #   }
+  # })
     
   # 
   # output$VariantPlot <- renderPlot({
