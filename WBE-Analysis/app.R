@@ -54,9 +54,13 @@ ui <- fluidPage(
       # plotOutput("N1Plot"),
       # checkboxInput('hide_points', "Hide Points: N1 Counts", value = FALSE),
       titlePanel(h4("Variant Proportions - Weekly", align = "center")),
-      plotlyOutput("VariantPlot")
+      plotlyOutput("VariantPlot"),
       
-      # plotOutput("VariantPlot")
+      # Variant Proportions Help
+      p("There are two hover modes to inspect the variants, single or compare. This is found in the upper right corner of the visual.", align="center"),
+      p("Double click a variant in the legend to see only that variant, then single click another to add it to the view.", align="center"),
+      p("Double click any variant to return to the full view.", align="center")
+      
     )
 )
 
