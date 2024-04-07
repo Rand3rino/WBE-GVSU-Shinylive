@@ -15,7 +15,7 @@ options(scipen = 999)
 
 # https://matrixify-excelify.medium.com/download-specific-google-sheets-tab-as-csv-file-e805ecef29fc
 # VariantProportions <- read.csv("https://docs.google.com/spreadsheets/d/19sCocxxppFfBrM0AKEojOzWoN6C6myoZjIA492deetc/export?format=csv")
-VariantProportions <- read.csv("https://docs.google.com/spreadsheets/d/19sCocxxppFfBrM0AKEojOzWoN6C6myoZjIA492deetc/gviz/tq?tqx=out:csv;outFileName:data&sheet=Sheet1")
+VariantProportions <- read.csv("https://docs.google.com/spreadsheets/d/1fDYNLol8WdsZkgQih2wnnOnT6QEVhB7X/gviz/tq?tqx=out:csv;outFileName:data&sheet=DataExport")
 colnames(VariantProportions) <- paste(colnames(VariantProportions), match(colnames(VariantProportions), colnames(VariantProportions)), sep="_")
 VariantProportions <- VariantProportions %>%
   pivot_longer(!Date.by.Week_1, names_to = "Variant", values_to = "Proportion", values_drop_na = TRUE)
@@ -26,7 +26,7 @@ VariantProportions <- VariantProportions[order(VariantProportions$Appearance),]
 VariantProportions$Variant <- factor(VariantProportions$Variant, levels=unique(VariantProportions$Variant))
 VariantProportions <- select(VariantProportions, -Variant)
 
-VariantColors <- read.csv("https://docs.google.com/spreadsheets/d/19sCocxxppFfBrM0AKEojOzWoN6C6myoZjIA492deetc/gviz/tq?tqx=out:csv;outFileName:data&sheet=Sheet2")
+VariantColors <- read.csv("https://docs.google.com/spreadsheets/d/1fDYNLol8WdsZkgQih2wnnOnT6QEVhB7X/gviz/tq?tqx=out:csv;outFileName:data&sheet=ColorKey")
 VariantColors$Variant <- factor(VariantColors$Variant, levels=unique(VariantColors$Variant))
 VariantColors$HexCode <- toupper(VariantColors$HexCode)
 VariantColors$Appearance <- 2:(nrow(VariantColors)+1)
