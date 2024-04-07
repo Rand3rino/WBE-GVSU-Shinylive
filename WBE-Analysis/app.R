@@ -6,11 +6,11 @@ library(plotly)
 
 # N1 Counts, weighted average by flow per day
 options(scipen = 999)
-# N1counts <- read.csv("https://docs.google.com/spreadsheets/d/1Y8HZf93GiC_8XjK7nxqZONcTmi4Ck7EH96hR4q6Kbio/gviz/tq?tqx=out:csv;outFileName:data&sheet=N1%20Counts")
-# N1counts$Date <- as.Date(as.character(N1counts$Date), format = "%y%m%d")
-# N1 <- N1counts %>% 
-#         group_by(Date) %>% 
-#         summarise( N1 = mean(N1.GC.mL * Flow..mL.Day.))
+N1counts <- read.csv("https://docs.google.com/spreadsheets/d/13LVOMwdBmBEYLrLYP0GgrSMTHuglqYM7yBdZ5RrEKAs/gviz/tq?tqx=out:csv;outFileName:data&sheet=DataExport")
+N1counts$Date <- as.Date(as.character(N1counts$Date.min.), format = "%m/%d/%Y")
+# N1 <- N1counts %>%
+#         group_by(Date) %>%
+#         summarise( N1 = mean(Weighted.N.Count..quotient.sum.sum..))
 
 
 # https://matrixify-excelify.medium.com/download-specific-google-sheets-tab-as-csv-file-e805ecef29fc
@@ -32,6 +32,8 @@ VariantColors$HexCode <- toupper(VariantColors$HexCode)
 VariantColors$Appearance <- 2:(nrow(VariantColors)+1)
 VariantProportions <- left_join( VariantProportions, VariantColors, by="Appearance")
 
+N1counts <- filter(N1counts, max(VariantProportions$Week) >= N1counts$Date)
+
 
 # # Define UI for application that draws a line chart
 ui <- fluidPage(
@@ -50,9 +52,9 @@ ui <- fluidPage(
       
       # Plots
       # plotlyOutput("N1Plot"),
-      # titlePanel(h4("N1 Counts Over Time (Log Scale)", align="center")),
-      # plotOutput("N1Plot"),
-      # checkboxInput('hide_points', "Hide Points: N1 Counts", value = FALSE),
+      titlePanel(h4("N1 Counts Over Time", align="center")),
+      plotOutput("N1Plot"),
+      checkboxInput('hide_points', "Hide Points: N1 Counts", value = FALSE),
       titlePanel(h4("Variant Proportions - Weekly", align = "center")),
       plotlyOutput("VariantPlot"),
       
@@ -100,28 +102,19 @@ server <- function(input, output) {
     p %>% config(displayModeBar = TRUE, displaylogo=FALSE, modeBarButtonsToRemove = c("zoom2d", "pan2d", "select2d", "lasso2d", "zoomIn2d", "zoomOut2d"))
   })
   
-  # output$N1Plot <- renderPlot({
-  #   if (input$hide_points) {
-  #     (
-  #       ggplot(N1counts, aes(x = Date, y = N1.GC.100mL))
-  #       + geom_smooth()
-  #       + theme_bw()
-  #       + scale_y_log10()
-  #       + ylab("N1 Counts (Log Scale)")
-  #       + theme(plot.title = element_text(hjust = 0.5))
-  #     )
-  #   }
-  #   else {
-  #     (
-  #       ggplot(N1counts, aes(x = Date, y = N1.GC.100mL)) + geom_point()
-  #       + geom_smooth()
-  #       + theme_bw()
-  #       + scale_y_log10()
-  #       + ylab("N1 Counts (Log Scale)")
-  #       # + ggtitle("N1 Counts over Time (Log Scale)", )+theme(plot.title = element_text(hjust = 0.5))
-  #     )
-  #   }
-  # })
+  output$N1Plot <- renderPlot({
+    if (input$hide_points) {
+      (
+        ggplot(N1counts, aes(x = Date, y = Weighted.N.Count..quotient.sum.sum..)) + geom_smooth(se=F) + theme_bw() + theme(axis.text=element_text(angle=90, size=11), axis.title = element_text(size = 13, margin = margin(r=20),face="bold")) + scale_x_date(expand =c(0,0), date_breaks  ="1 month") + ylab("N1 Counts") + theme(plot.title = element_text(hjust = 0.5))
+      )
+    }
+    else {
+      (
+        ggplot(N1counts, aes(x = Date, y = Weighted.N.Count..quotient.sum.sum..)) + geom_point() + geom_smooth(se=F) + theme_bw() + theme(axis.text=element_text(angle=90, size=11), axis.title = element_text(size = 12, face="bold"), axis.title.y = element_text(angle=0)) + scale_x_date(expand =c(0,0), date_breaks  ="1 month") + ylab("N1Count") + theme(plot.title = element_text(hjust = 0.5))
+        # + ggtitle("N1 Counts over Time (Log Scale)", )+theme(plot.title = element_text(hjust = 0.5))
+      )
+    }
+  })
     
   # 
   # output$VariantPlot <- renderPlot({
@@ -133,5 +126,6 @@ server <- function(input, output) {
 shinyApp(ui = ui, server = server)
 
 
+# Run these commands in the console to test shinylive locally
 #shinylive::export("WBE-Analysis", "docs")
 #httpuv::runStaticServer("docs")
